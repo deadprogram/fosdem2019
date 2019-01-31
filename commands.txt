@@ -1,0 +1,33 @@
+hello, world in go
+go run demo/helloworld/main.go
+
+digispark blink
+./build/tgo flash -target=digispark -size=short examples/blinky1
+
+./build/tgo build -target=digispark -size=short -o blinky1.hex examples/blinky1
+micronucleus --run ./blinky1.hex
+
+arduino button
+./build/tgo flash -target=arduino -size=short examples/button
+
+arduino colorlamp
+./build/tgo flash -target=arduino -size=short examples/colorlamp
+
+microbit cursor game
+./build/tgo flash -target=microbit -size=short examples/cursorgame
+
+microbit gopherbot
+./build/tgo flash -target=microbit -size=short examples/gopherbot
+
+itsybitsy espconsole
+./build/tgo build -target=itsybitsy-m0 -size=short -o espconsole.bin examples/espconsole
+~/Development/uf2/utils/uf2conv.py ./espconsole.bin
+
+itsybitsy esphub
+./build/tgo build -target=itsybitsy-m0 -size=short -o esphub.bin examples/esphub
+~/Development/uf2/utils/uf2conv.py ./espconsole.bin
+
+flight stick
+./build/tgo flash -target=pca10040 -size=short examples/flightstick
+
+tinydrone

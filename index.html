@@ -1,0 +1,799 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8">
+
+<title>Small Is Going Big: Go On Microcontrollers - FOSDEM 2019</title>
+
+<meta name="description" content="Computer Vision & IoT">
+<meta name="author" content="Ron Evans">
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<link rel="stylesheet" href="css/reveal.css">
+<link rel="stylesheet" href="css/theme/default.css" id="theme">
+
+<!-- For syntax highlighting -->
+<link rel="stylesheet" href="lib/css/tomorrow.css">
+
+<link rel="stylesheet" href="css/hybrid.css">
+
+<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+<script>
+	document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+</script>
+
+<!--[if lt IE 9]>
+<script src="lib/js/html5shiv.js"></script>
+<![endif]-->
+</head>
+
+<body>
+	<div class="reveal">
+
+	<!-- Any section element inside of this container is displayed as a slide -->
+	<div class="slides">
+		<section>
+			<section>
+				<h1>Small Is Going Big: Go On Microcontrollers - FOSDEM 2019</h1>
+				<h2>Ron Evans - @deadprogram</h2>
+			</section>
+		</section>
+
+		<section>
+			<h2>Ron Evans (@deadprogram)</h2>
+		</section>
+
+		<section>
+			<div class="image-container">
+				<img src="images/thg-logo.png">
+			</div>
+			<h3>hybridgroup.com</h3>
+		</section>
+	  
+		<section>
+		  <h2>Clients</h2>
+		</section>
+  
+		<section>
+		  <div class="image-container">
+			<img src="images/intel-logo.jpg">
+		  </div>
+		</section>
+  
+		<section>
+		  <div class="image-container">
+			<img src="images/sphero-logo.png">
+		  </div>
+		</section>
+  
+		<section>
+			<h2>Open Source Projects</h2>
+		</section>
+  
+		<section>
+		  <div class="image-container">
+			<img src="images/gobot-logo.png">
+		  </div>
+		  <h3>gobot.io</h3>
+		</section>
+
+		<section>
+		  <div class="image-container">
+			<img src="images/gocvlogo.jpg">
+		  </div>
+		  <h3>gocv.io</h3>          
+		</section>
+
+		<section>
+			<div class="image-container">
+			  <img src="images/tinygo-logo.png">
+			</div>
+			<h2>TinyGo</h2>
+			<h3>tinygo.org</h3>          
+		</section>
+
+		<section>
+			<h2>What is TinyGo?</h2>
+	  	</section>
+  	
+		<section>
+			<section>
+				<h2>Languages for Embedded</h2>
+			</section>
+
+			<section>
+				<h2>C</h2>
+			</section>
+
+			<section>
+				<h2>C++</h2>
+			</section>
+
+			<section>
+				<h2>MicroPython</h2>
+			</section>
+
+			<section>
+				<h2>JerryScript/Espruino/Other JS Things</h2>
+			</section>
+
+			<section>
+				<h2>Rust</h2>
+			</section>
+				
+			<section>
+				<div class="image-container">
+					<img src="images/Go-Logo_Fuchsia.png">
+				</div>
+				<h3>golang.org</h3>
+			</section>	
+		</section>
+
+		<section>
+			<h2>But I Thought Go Was Too Big?</h2>
+		</section>
+
+		<section>
+			<h2>"Hello, world" in Go</h2>
+		</section>
+
+		<section>
+			<section>
+			<pre><code class="golang">
+package main
+
+func main() {
+	println("Hello, world")
+}					
+			</code></pre>
+			</section>
+		</section>			
+
+		<section>
+			<h2>"Hello, world" compiled with Go 1.11.2</h2>
+		</section>
+
+		<section>
+			<section>
+				<pre><code class="shell">
+$ go version
+go version go1.11.2 linux/amd64
+
+$ go run ./helloworld/main.go 
+Hello, world
+
+$ go build -o helloworldgo ./helloworld/
+
+$ ls -l helloworldgo 
+-rwxrwxr-x 1 ron ron 1072001 ene 30 19:26 helloworldgo
+				</code></pre>
+			</section>	
+		</section>
+
+		<section>
+			<h2>"Hello, world" compiled with TinyGo</h2>
+		</section>
+
+		<section>
+			<section>
+				<pre><code class="shell">
+$ tinygo run examples/helloworld
+Hello, world
+
+$ tinygo build -o helloworldgo examples/helloworld
+
+$ ls -l helloworldgo 
+-rwxrwxr-x 1 ron ron 10248 ene 30 19:31 helloworldgo
+				</code></pre>
+			</section>	
+		</section>
+
+		<section>
+			<h2>"Hello, world" binary sizes</h2>
+			<h2>Go 1.11.2</h2>
+			<h3>File size: 1072001</h3><br>
+			<h2>TinyGo</h2>
+			<h3>File size: 10248</h3>
+		</section>
+	
+		<section>
+			<h2>How Can You Do That?</h2>
+		</section>
+
+		<section>
+			<h2>Let's just clear one thing up right away</h2>
+		</section>
+
+		<section>
+			<h2>TinyGo is not the same thing as normal Go</h2>
+		</section>
+
+		<section>
+			<h2>TinyGo does not support the entire Go language...yet</h2>
+		</section>
+
+		<section>
+			<h2>TinyGo does not support the entire Go standard library...yet</h2>
+		</section>
+
+		<section>
+			<h2>But TinyGo does have a lot of support already</h2>
+		</section>
+	
+		<section>
+			<h2>And TinyGo can already be very useful for small places</h2>
+		</section>
+
+		<section>
+			<h2>WebAssembly</h2>
+		</section>
+
+		<section>
+			<h2>Command-line tools</h2>
+		</section>
+	
+		<section>
+			<h2>Microcontrollers</h2>
+		</section>
+		
+		<section>          
+			<section>
+				<h2>How TinyGo Works</h2>
+			</section>
+
+			<section>
+				<h2>Go tooling --> TinyGo --> LLVM</h2>
+			</section>
+	
+			<section>
+				<div class="image-container">
+					<img src="images/tinygo-arch-1.png">
+				</div>
+				<p>TinyGo architecture</p>
+			</section>	
+		</section>
+
+		<section>          
+			<section>
+				<h2>How to get code onto a Microcontroller</h2>
+			</section>
+
+			<section>
+				<h2>Build new code</h2>
+			</section>
+	
+			<section>
+				<h2>Microcontroller bootloader</h2>
+			</section>
+
+			<section>
+				<h2>Flash new code</h2>
+			</section>
+
+			<section>
+				<h2>Execute the current code</h2>
+			</section>
+
+			<section>
+				<h2>Every MCU has different compilers</h2>
+			</section>					
+
+			<section>
+				<h2>Every MCU has different bootloaders</h2>
+			</section>					
+
+			<section>
+				<h2>Every MCU has different flashing tools</h2>
+			</section>						
+		</section>
+
+
+		<section>
+			<section>
+				<h2>How to get TinyGo code onto a Microcontroller</h2>
+			</section>
+		
+			<section>
+				<pre><code class="shell">
+tinygo build
+				</code></pre>
+			</section>
+
+			<section>
+				<pre><code class="shell">
+tinygo flash
+				</code></pre>
+			</section>	
+		</section>	
+	
+		<!-- demo 1 -->
+		<section>
+			<section>
+				<h2>"Hello, World" of Things</h2>
+				<h3>Digispark + LED</h3>
+			</section>
+
+			<section>
+				<h2>Digispark</h2>
+				<h3>Atmel ATTiny85</h3>
+				<h3>8-bit processor</h3>
+				<h3>16 Mhz</h3>
+				<h3>8K Flash</h3>
+			</section>
+
+			<section>
+				<pre><code class="golang">
+package main
+
+import (
+	"machine"
+	"time"
+)
+
+func main() {
+	led := machine.GPIO{machine.LED}
+	led.Configure(machine.GPIOConfig{Mode: machine.GPIO_OUTPUT})
+	for {
+		led.Low()
+		time.Sleep(time.Millisecond * 500)
+
+		led.High()
+		time.Sleep(time.Millisecond * 500)
+	}
+}						
+				</code></pre>
+			</section>
+
+			<section>
+				<h2>Demo</h2>
+			</section>
+		</section>
+
+		<!-- demo 2 -->
+		<section>
+			<section>
+				<h2>GPIO Input & Output</h2>
+				<h3>Arduino Uno + LED + Button</h3>
+			</section>
+
+			<section>
+				<h2>Arduino Uno</h2>
+				<h3>Atmel ATMega328P</h3>
+				<h3>8-bit processor</h3>
+				<h3>20 Mhz</h3>
+				<h3>32K Flash</h3>
+			</section>
+
+
+			<section>
+				<pre><code class="golang">
+// code here...
+				</code></pre>
+			</section>
+
+			<section>
+				<h2>Demo</h2>
+			</section>
+		</section>
+
+
+		<!-- demo 3 -->
+		<section>
+			<section>
+				<h2>Color Lamp</h2>
+				<h3>Arduino Uno + RGB LED + Button + Rotary Dial</h3>
+			</section>
+
+			<section>
+				<h2>Pulse Width Modulation (PWM)</h2>
+			</section>
+
+			<section>
+				<h2>Analog to Digital Converter (ADC)</h2>
+			</section>
+	
+			<section>
+				<pre><code class="golang">
+package main
+
+import (
+	"machine"
+	"time"
+)
+
+const (
+	buttonPin = 2
+	redPin    = 3
+	greenPin  = 5
+	bluePin   = 6
+
+	red   = 0
+	green = 1
+	blue  = 2
+)
+
+func main() {
+	machine.InitADC()
+	machine.InitPWM()
+
+	button := machine.GPIO{buttonPin}
+	button.Configure(machine.GPIOConfig{Mode: machine.GPIO_INPUT})
+
+	dial := machine.ADC{machine.ADC0}
+	dial.Configure()
+
+	redLED := machine.PWM{redPin}
+	redLED.Configure()
+
+	greenLED := machine.PWM{greenPin}
+	greenLED.Configure()
+
+	blueLED := machine.PWM{bluePin}
+	blueLED.Configure()
+
+	selectedColor := red
+	colors := []uint16{0, 0, 0}
+
+	for {
+		// If we pushed the button, switch active color.
+		if !button.Get() {
+			if selectedColor == blue {
+				selectedColor = red
+			} else {
+				selectedColor++
+			}
+		}
+
+		// Change the intensity for the currently selected color based on the dial setting.
+		colors[selectedColor] = (dial.Get())
+
+		// Update the RGB LED.
+		redLED.Set(colors[red])
+		greenLED.Set(colors[green])
+		blueLED.Set(colors[blue])
+
+		time.Sleep(time.Millisecond * 100)
+	}
+}						
+				</code></pre>
+			</section>
+
+			<section>
+				<h2>Demo</h2>
+			</section>
+		</section>
+
+
+
+		<section>
+			<h2>And then came the 32-bit revolution</h2>
+		</section>
+
+		<section>
+			<h2>ARM</h2>
+		</section>
+
+		<section>
+			<h2>After that, Microcontrollers became a lot more powerful</h2>
+		</section>
+
+
+		<!-- demo 4 -->
+		<section>
+			<section>
+				<h2>Cursor game</h2>
+				<h3>BBC:Microbit + LED array + Buttons</h3>
+			</section>
+
+			<section>
+				<h2>BBC: Microbit</h2>
+				<h3>Nordic Semiconductor nrf51</h3>
+				<h3>ARM Cortex M0</h3>
+				<h3>32-bit processor</h3>
+				<h3>16 Mhz</h3>
+				<h3>256K Flash</h3>
+			</section>
+		
+			<section>
+				<pre><code class="golang">
+// code here...
+				</code></pre>
+			</section>
+
+			<section>
+				<h2>Demo</h2>
+			</section>
+		</section>
+
+
+		<!-- demo 5 -->
+		<section>
+			<section>
+				<h2>Gopherbot</h2>
+				<h3>BBC:Microbit + APA102 LED array + Buttons + LED</h3>
+			</section>
+
+			<section>
+				<h2>Serial Peripheral Interface (SPI)</h2>
+			</section>
+
+			<section>
+				<h2>APA102 LED</h2>
+			</section>
+	
+			<section>
+				<pre><code class="golang">
+// code here...
+				</code></pre>
+			</section>
+
+			<section>
+				<h2>Demo</h2>
+			</section>
+		</section>
+
+	
+
+		<section>
+			<h2>Choose Your Own Hardware Adventure</h2>
+		</section>
+
+		<section>
+			<h2>Digispark</h2>
+		</section>
+
+		<section>
+			<h2>Adafruit Circuit Playground Express</h2>
+		</section>
+
+		<section>
+			<h2>ESP8266 Wifi Adaptor</h2>
+		</section>
+	
+		<section>
+			<h2>Tweet using #tinygo #fosdem about why you should win</h2>
+		</section>
+	
+
+
+		<section>
+			<h2>Internet of Things</h2>
+		</section>
+
+		<section>
+			<h2>Internet Protocol (IP)</h2>
+		</section>
+	
+		<section>
+			<h2>Go standard library</h2>
+		</section>
+
+		<section>
+			<h2>net?</h2>
+		</section>
+	
+		<section>
+			<h2>not yet</h2>
+		</section>
+	
+		<section>
+			<h2>For now only a subset of interfaces are compatible</h2>
+		</section>
+
+		<section>
+			<h2>ESP8266</h2>
+		</section>
+	
+
+		<!-- demo 6 -->
+		<section>
+			<section>
+				<h2>ESPHUB</h2>
+				<h3>Adafruit ItsyBitsy M0 + ESP8266 WiFi Module + LED</h3>
+			</section>
+
+			<section>
+				<h2>Microchip SAMD21</h2>
+				<h3>ARM Cortex M0</h3>
+				<h3>32-bit processor</h3>
+				<h3>48 Mhz</h3>
+				<h3>256K Flash</h3>
+			</section>
+	
+			<section>
+				<h2>Universal Asyncronous Receiver/Transmiter (UART)</h2>
+			</section>
+
+			<section>
+				<h2>AT Commands</h2>
+			</section>
+	
+			<section>
+				<pre><code class="golang">
+// code here...
+				</code></pre>
+			</section>
+
+			<section>
+				<h2>Demo</h2>
+			</section>
+		</section>
+	
+
+		<!-- demo 7 -->
+		<section>
+			<section>
+				<h2>Flight Controller</h2>
+				<h3>Nordic Semiconductor PCA10040 + Analog Joystick + LED + UART</h3>
+			</section>
+
+			<section>
+				<h2>Nordic Semiconductor nrf52</h2>
+				<h3>ARM Cortex M4</h3>
+				<h3>32-bit processor</h3>
+				<h3>64 Mhz</h3>
+				<h3>512K Flash</h3>
+			</section>
+	
+			<section>
+				<h2>Serial Peripheral Interface (SPI)</h2>
+			</section>
+
+			<section>
+				<h2>APA102 LED</h2>
+			</section>
+	
+			<section>
+				<pre><code class="golang">
+// code here...
+				</code></pre>
+			</section>
+
+			<section>
+				<h2>Demo</h2>
+			</section>
+		</section>
+
+		<section>
+			<h2>Full Application: Flight Control</h2>
+		</section>
+
+		<!-- demo 8 -->
+		<section>
+			<section>
+				<h2>Flight System</h2>
+				<h3>Flight Controller + CV Ground System + Tello Drone</h3>
+			</section>
+
+			<section>
+				<h2>Tello</h2>
+			</section>
+
+			<section>
+				<h2>Gobot</h2>
+			</section>
+	
+			<section>
+				<h2>GoCV</h2>
+			</section>
+
+			<section>
+				<h2>Diagram</h2>
+			</section>
+	
+			<section>
+				<pre><code class="golang">
+// code here...
+				</code></pre>
+			</section>
+
+			<section>
+				<h2>Demo</h2>
+			</section>
+		</section>
+	
+				
+
+        <section>
+            <h2>One last thought...</h2>
+        </section>
+
+        <section>
+            <h2>
+                <blockquote>
+                    Humanity is acquiring all the right technology for all the wrong reasons.
+                </blockquote>
+                <figcaption>R. Buckminster "Bucky" Fuller</figcaption>
+            </h2>
+        </section>
+
+        <section>
+            <div class="image-container">
+                <img src="images/utopia-or-oblivion.jpg">
+            </div>
+        </section>
+
+        <section>
+            <div class="image-container">
+                <img src="images/abandoned-spacecraft.jpg">
+            </div>
+            <p>"Abandoned Buran shuttle" - Ralph Mirebs</p>
+            <p>https://ralphmirebs.livejournal.com/219949.html</p>
+        </section>
+
+        <section>
+            <div class="image-container">
+                <img src="images/panopticon.jpg">
+            </div>
+            <p>"Stateville Correctional Center" - Doug DuBois & Jim Goldberg</p>
+            <p>http://www.dougdubois.com/</p>
+            <p>http://www.magnumphotos.com/jimgoldberg</p>
+        </section>
+    
+        <section>
+            <div class="image-container">
+                <img src="images/altitude.jpg">
+            </div>
+            <p>"Altitude determines attitude" - Robert Pruitt</p>
+            <p>http://robertpruittartist.tumblr.com</p>          
+        </section>
+
+        <section>
+			<h2>Questions?</h2>
+		</section>	
+	
+		<section>
+			<h1>Thank you!</h1>
+			<h2>@deadprogram</h2>
+		</section>	
+	  </div>
+	</div>
+
+	<script src="lib/js/head.min.js"></script>
+	<script src="js/reveal.min.js"></script>
+	<script src="js/hybrid.js"></script>
+
+	<script>
+
+	  // Full list of configuration options available here:
+	  // https://github.com/hakimel/reveal.js#configuration
+	  Reveal.initialize({
+		controls: true,
+		progress: true,
+		history: true,
+		center: true,
+
+		theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+		transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+		// Parallax scrolling
+		// parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+		// parallaxBackgroundSize: '2100px 900px',
+
+		leap: {
+		  naturalSwipe   : true,    // Invert swipe gestures
+		  pointerOpacity : 0.5,      // Set pointer opacity to 0.5
+		  pointerColor   : '#d80000' // Red pointer
+		},
+
+		// Optional libraries used to extend on reveal.js
+		dependencies: [
+		  { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+		  { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+		  { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+		  { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+		  { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+		  { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+		  { src: 'plugin/leap/leap.js', async: true }
+		]
+	  });
+
+	</script>
+
+  </body>
+</html>
